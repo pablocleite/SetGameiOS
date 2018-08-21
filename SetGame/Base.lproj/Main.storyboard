@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="Stack View standard spacing" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -345,7 +346,44 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="140" y="133.5832083958021"/>
+            <point key="canvasLocation" x="-311" y="134"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="mfo-R3-HOe">
+            <objects>
+                <viewController id="9Fh-0z-NRM" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="I9k-RR-UsU">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="x3V-Hh-Mrr" customClass="SetCardView" customModule="SetGame" customModuleProvider="target">
+                                <rect key="frame" x="87" y="193" width="200.5" height="301"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="x3V-Hh-Mrr" secondAttribute="height" multiplier="2:3" id="HN9-YV-zm6"/>
+                                    <constraint firstAttribute="width" constant="200" id="Rqe-9r-RBt"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="ibColor">
+                                        <integer key="value" value="0"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="ibCount">
+                                        <integer key="value" value="3"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="x3V-Hh-Mrr" firstAttribute="centerX" secondItem="vwj-iX-qjc" secondAttribute="centerX" id="QGb-MH-xfD"/>
+                            <constraint firstItem="x3V-Hh-Mrr" firstAttribute="centerY" secondItem="vwj-iX-qjc" secondAttribute="centerY" id="xl5-tn-ovQ"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="vwj-iX-qjc"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="iX9-yy-lc8" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="445.60000000000002" y="133.5832083958021"/>
         </scene>
     </scenes>
 </document>

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		78853476212C9DA700B329AB /* SetCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78853475212C9DA700B329AB /* SetCardView.swift */; };
 		AAB4DFB820F18DBB00A19A20 /* Array+Shuffle.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAB4DFB720F18DBA00A19A20 /* Array+Shuffle.swift */; };
 		AAB4DFBB20F18E2D00A19A20 /* Int+Random.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAB4DFBA20F18E2D00A19A20 /* Int+Random.swift */; };
 		AAEE701120F16C1200662404 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAEE701020F16C1200662404 /* AppDelegate.swift */; };
@@ -20,6 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		78853475212C9DA700B329AB /* SetCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetCardView.swift; sourceTree = "<group>"; };
 		AAB4DFB720F18DBA00A19A20 /* Array+Shuffle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+Shuffle.swift"; sourceTree = "<group>"; };
 		AAB4DFBA20F18E2D00A19A20 /* Int+Random.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Int+Random.swift"; sourceTree = "<group>"; };
 		AAEE700D20F16C1200662404 /* SetGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SetGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -45,6 +47,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		78853474212C9D7700B329AB /* View */ = {
+			isa = PBXGroup;
+			children = (
+				78853475212C9DA700B329AB /* SetCardView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		AAB4DFB920F18DD300A19A20 /* CommonExtensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -74,6 +84,7 @@
 			isa = PBXGroup;
 			children = (
 				AAEE702220F16C3000662404 /* SupportFiles */,
+				78853474212C9D7700B329AB /* View */,
 				AAEE701220F16C1200662404 /* ViewController.swift */,
 				AAEE701420F16C1200662404 /* Main.storyboard */,
 				AAEE701C20F16C1300662404 /* Info.plist */,
@@ -171,6 +182,7 @@
 				AAB4DFB820F18DBB00A19A20 /* Array+Shuffle.swift in Sources */,
 				AAEE702420F1788100662404 /* SetGame.swift in Sources */,
 				AAEE702820F17CAC00662404 /* Deck.swift in Sources */,
+				78853476212C9DA700B329AB /* SetCardView.swift in Sources */,
 				AAEE701120F16C1200662404 /* AppDelegate.swift in Sources */,
 				AAEE702620F1796700662404 /* Card.swift in Sources */,
 			);
