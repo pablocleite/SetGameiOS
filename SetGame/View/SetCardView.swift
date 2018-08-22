@@ -48,6 +48,26 @@ class SetCardView: UIView {
     }
   }
 
+  @IBInspectable var stripeSpacing: CGFloat = 4.0 {
+    didSet {
+      guard stripeSpacing > 1 else {
+        stripeSpacing = oldValue
+        return
+      }
+      setNeedsDisplay()
+    }
+  }
+
+  @IBInspectable var shapeStrokeWidth: CGFloat = 2.0 {
+    didSet {
+      guard shapeStrokeWidth > 0 else {
+        shapeStrokeWidth = oldValue
+        return
+      }
+      setNeedsDisplay()
+    }
+  }
+
 
   //MARK: - Properties
   private var shape: Shape = .oval
@@ -56,57 +76,119 @@ class SetCardView: UIView {
   private var shading: Shading = .solid
 
   override func draw(_ rect: CGRect) {
-    drawBorder()
-
-    switch shape {
-    case .oval:
-      drawOvalShape()
-    case .diamond:
-      drawDiamondShape()
-    case .squiggle:
-      drawSquiggleShape()
-    }
+    drawCard()
+    drawShapes()
   }
 
-  private func drawBorder() {
+  private func drawCard() {
     let roundedRect = UIBezierPath(roundedRect: bounds, cornerRadius: cornerRadius)
     roundedRect.addClip() //Will enforce clipping outside this rounded rect.
     UIColor.white.setFill()
     roundedRect.fill()
   }
 
-  private func drawOvalShape() {
+  private func drawShapes() {
     switch shapeCount {
     case .one:
-      drawSingleOvalShape(bounds: centerShapeBounds)
+      drawSingleShape(bounds: centerShapeBounds)
     case .two:
       let topShapeBounds = centerShapeBounds.applying(CGAffineTransform(translationX: 0, y: -shapeSize.height))
-      drawSingleOvalShape(bounds: topShapeBounds)
+      drawSingleShape(bounds: topShapeBounds)
       let bottomShapeBounds = centerShapeBounds.applying(CGAffineTransform(translationX: 0, y: shapeSize.height))
-      drawSingleOvalShape(bounds: bottomShapeBounds)
+      drawSingleShape(bounds: bottomShapeBounds)
     case .three:
       let topShapeBounds = centerShapeBounds.applying(CGAffineTransform(translationX: 0, y: -(shapeSize.height + shapeSize.height*0.5)))
-      drawSingleOvalShape(bounds: topShapeBounds)
+      drawSingleShape(bounds: topShapeBounds)
 
-      drawSingleOvalShape(bounds: centerShapeBounds)
+      drawSingleShape(bounds: centerShapeBounds)
 
       let bottomShapeBounds = centerShapeBounds.applying(CGAffineTransform(translationX: 0, y: shapeSize.height + shapeSize.height*0.5))
-      drawSingleOvalShape(bounds: bottomShapeBounds)
+      drawSingleShape(bounds: bottomShapeBounds)
+    }
+  }
+
+  private func drawShading(on shape: UIBezierPath, withinBounds bounds: CGRect) {
+    guard let cgContext = UIGraphicsGetCurrentContext() else {
+      print("Current CGContext is nil, cannot draw shading.")
+      return
+    }
+
+    cgContext.saveGState()
+    switch shading {
+    case .solid:
+      color.uiColor.setFill()
+      shape.fill()
+    case .outlined:
+      color.uiColor.setStroke()
+      shape.stroke()
+    case .stripped:
+      shape.addClip() //The main shape must be the clipping path, so stripes can be safelly drawn within bounds.
+      color.uiColor.setStroke()
+      shape.stroke()
+
+      for y in stride(from: bounds.origin.y, to: bounds.origin.y + bounds.size.height, by: stripeSpacing) {
+        let line = UIBezierPath()
+        line.move(to: CGPoint(x: bounds.origin.x, y: y))
+        line.addLine(to: CGPoint(x: bounds.origin.x + bounds.size.width, y: y))
+        line.stroke()
+      }
+    }
+
+    cgContext.restoreGState()
+  }
+
+  private func drawSingleShape(bounds: CGRect) {
+    switch shape {
+    case .oval:
+      drawSingleOvalShape(bounds: bounds)
+    case .diamond:
+      drawSingleDiamondShape(bounds: bounds)
+    case .squiggle:
+      drawSingleSquiggleShape(bounds: bounds)
     }
   }
 
   private func drawSingleOvalShape(bounds: CGRect) {
-    let roundedRect = UIBezierPath(roundedRect: bounds, cornerRadius: shapeSize.height * 0.5)
-    color.uiColor.setFill()
-    roundedRect.fill()
+    let shape = UIBezierPath(roundedRect: bounds, cornerRadius: shapeSize.height * 0.5)
+    shape.lineWidth = shapeStrokeWidth
+    drawShading(on: shape, withinBounds: bounds)
   }
 
-  private func drawDiamondShape() {
+  private func drawSingleDiamondShape(bounds: CGRect) {
+    let shape = UIBezierPath()
+    shape.lineWidth = shapeStrokeWidth
+    shape.move(to: CGPoint(x: bounds.origin.x, y: bounds.midY))
+    shape.addLine(to: CGPoint(x: bounds.midX, y: bounds.origin.y))
+    shape.addLine(to: CGPoint(x: bounds.origin.x + bounds.size.width, y: bounds.midY))
+    shape.addLine(to: CGPoint(x: bounds.midX, y: bounds.origin.y + bounds.size.height))
+    shape.close()
 
+    drawShading(on: shape, withinBounds: bounds)
   }
 
-  private func drawSquiggleShape() {
+  private func drawSingleSquiggleShape(bounds: CGRect) {
+    let shape = UIBezierPath()
+    shape.lineWidth = shapeStrokeWidth
+    shape.move(to: CGPoint(x: bounds.origin.x + bounds.size.width * 0.05, y: bounds.origin.y + bounds.size.height * 0.65))
 
+    shape.addCurve(to: CGPoint(x: bounds.origin.x + bounds.size.width * 0.80, y: bounds.origin.y + bounds.size.height * 0.35),
+                   controlPoint1: CGPoint(x: bounds.origin.x + bounds.size.width * 0.10, y: bounds.origin.y - bounds.size.height * 0.55),
+                   controlPoint2: CGPoint(x: bounds.origin.x + bounds.size.width * 0.65, y: bounds.origin.y + bounds.size.height * 1.25))
+
+    shape.addCurve(to: CGPoint(x: bounds.origin.x + bounds.size.width * 0.90, y: bounds.origin.y + bounds.size.height * 0.65),
+                   controlPoint1: CGPoint(x: bounds.origin.x + bounds.size.width * 0.9, y: bounds.origin.y + bounds.size.height * 0.15),
+                   controlPoint2: CGPoint(x: bounds.origin.x + bounds.size.width * 0.90, y: bounds.origin.y + bounds.size.height * 0.55))
+
+    shape.addCurve(to: CGPoint(x: bounds.origin.x + bounds.size.width * 0.20, y: bounds.origin.y + bounds.size.height * 0.55),
+                   controlPoint1: CGPoint(x: bounds.origin.x + bounds.size.width * 0.95, y: bounds.origin.y + bounds.size.height * 1.35),
+                   controlPoint2: CGPoint(x: bounds.origin.x + bounds.size.width * 0.40, y: bounds.origin.y + bounds.size.height * 0.45))
+
+    shape.addCurve(to: CGPoint(x: bounds.origin.x + bounds.size.width * 0.05, y: bounds.origin.y + bounds.size.height * 0.65),
+                   controlPoint1: CGPoint(x: bounds.origin.x + bounds.size.width * 0.10, y: bounds.origin.y + bounds.size.height * 0.70),
+                   controlPoint2: CGPoint(x: bounds.origin.x + bounds.size.width * 0.08, y: bounds.origin.y + bounds.size.height * 0.7))
+
+
+    drawShading(on: shape, withinBounds: bounds)
   }
 
 }
