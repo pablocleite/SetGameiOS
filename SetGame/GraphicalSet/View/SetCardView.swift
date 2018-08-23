@@ -68,6 +68,12 @@ class SetCardView: UIView {
     }
   }
 
+  @IBInspectable var isFaceUp: Bool = false {
+    didSet {
+      setNeedsDisplay()
+    }
+  }
+
 
   //MARK: - Properties
   private var shape: Shape = .oval
@@ -77,13 +83,25 @@ class SetCardView: UIView {
 
   override func draw(_ rect: CGRect) {
     drawCard()
-    drawShapes()
+    if (isFaceUp) {
+      drawShapes()
+    } else {
+      drawBackOfCard()
+    }
   }
 
   private func drawCard() {
-    let roundedRect = UIBezierPath(roundedRect: bounds, cornerRadius: cornerRadius)
+    let roundedRect = UIBezierPath(roundedRect: bounds, cornerRadius: bounds.height * cardCornerRadiusRatio)
     roundedRect.addClip() //Will enforce clipping outside this rounded rect.
     UIColor.white.setFill()
+    roundedRect.fill()
+  }
+
+  private func drawBackOfCard() {
+    let backOfCardBounds: CGRect = bounds.insetBy(dx: bounds.width * 0.05, dy: bounds.width * 0.05)
+    let roundedRect = UIBezierPath(roundedRect: backOfCardBounds, cornerRadius: backOfCardBounds.height * cardCornerRadiusRatio)
+    roundedRect.addClip() //Will enforce clipping outside this rounded rect.
+    UIColor.orange.setFill()
     roundedRect.fill()
   }
 
@@ -195,8 +213,8 @@ class SetCardView: UIView {
 
 extension SetCardView {
 
-  private var cornerRadius: CGFloat {
-    return bounds.size.height * 0.08
+  private var cardCornerRadiusRatio: CGFloat {
+    return 0.08
   }
 
   private var shapeWidthRatio: CGFloat {

@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  UIViewSetViewController.swift
 //  SetGame
 //
 //  Created by Pablo Leite on 07/07/2018.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class UIViewSetViewController: UIViewController {
 
     @IBOutlet weak var drawCardsButton: UIButton!
     @IBOutlet weak var scoreLabel: UILabel!
