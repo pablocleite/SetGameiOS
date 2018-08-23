@@ -44,11 +44,11 @@ class UIViewSetViewController: UIViewController {
         .solid : -1,
         .stripped : -1
     ]
-    
-    
+
+    private let initialCardsCount = 12
     
     override func viewDidLoad() {
-        game.initGame()
+        game.initGame(drawing: initialCardsCount)
         updateViewFromModel()
     }
     
@@ -99,7 +99,7 @@ class UIViewSetViewController: UIViewController {
     }
     
     @IBAction func touchReset(_ sender: UIButton) {
-        game.initGame()
+        game.initGame(drawing: initialCardsCount)
         updateViewFromModel()
     }
     

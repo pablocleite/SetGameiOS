@@ -74,17 +74,36 @@ class SetCardView: UIView {
     }
   }
 
+  @IBInspectable var isSelected: Bool = false {
+    didSet {
+      setNeedsDisplay()
+    }
+  }
+
 
   //MARK: - Properties
-  private var shape: Shape = .oval
-  private var shapeCount: ShapeCount = .two
-  private var color: Color = .red
-  private var shading: Shading = .solid
+  var shape: Shape = .oval
+  var shapeCount: ShapeCount = .two
+  var color: Color = .red
+  var shading: Shading = .solid
+
+  override init(frame: CGRect) {
+    super.init(frame: frame)
+    isOpaque = false
+  }
+
+  required init?(coder aDecoder: NSCoder) {
+    super.init(coder: aDecoder)
+    isOpaque = false
+  }
 
   override func draw(_ rect: CGRect) {
     drawCard()
     if (isFaceUp) {
       drawShapes()
+      if (isSelected) {
+        drawSelectedMask()
+      }
     } else {
       drawBackOfCard()
     }
@@ -92,8 +111,15 @@ class SetCardView: UIView {
 
   private func drawCard() {
     let roundedRect = UIBezierPath(roundedRect: bounds, cornerRadius: bounds.height * cardCornerRadiusRatio)
-    roundedRect.addClip() //Will enforce clipping outside this rounded rect.
+    roundedRect.addClip()
     UIColor.white.setFill()
+    roundedRect.fill()
+  }
+
+  private func drawSelectedMask() {
+    let roundedRect = UIBezierPath(roundedRect: bounds, cornerRadius: bounds.height * cardCornerRadiusRatio)
+    roundedRect.addClip()
+    UIColor.selectedMaskColor.setFill()
     roundedRect.fill()
   }
 
@@ -273,5 +299,8 @@ extension SetCardView {
     case stripped
     case outlined
   }
+}
 
+extension UIColor {
+  static let selectedMaskColor = UIColor.black.withAlphaComponent(0.3)
 }
