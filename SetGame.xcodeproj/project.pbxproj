@@ -93,6 +93,14 @@
 			path = View;
 			sourceTree = "<group>";
 		};
+		78F6E7C021307EB500365C86 /* UIViewSet */ = {
+			isa = PBXGroup;
+			children = (
+				AAEE701220F16C1200662404 /* UIViewSetViewController.swift */,
+			);
+			path = UIViewSet;
+			sourceTree = "<group>";
+		};
 		AAB4DFB920F18DD300A19A20 /* CommonExtensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -122,12 +130,12 @@
 			isa = PBXGroup;
 			children = (
 				AAEE702220F16C3000662404 /* SupportFiles */,
+				788046E8212EE50800D4D878 /* Game */,
 				788046E9212EE61000D4D878 /* GraphicalSet */,
-				AAEE701220F16C1200662404 /* UIViewSetViewController.swift */,
+				78F6E7C021307EB500365C86 /* UIViewSet */,
+				AAB4DFB920F18DD300A19A20 /* CommonExtensions */,
 				AAEE701420F16C1200662404 /* Main.storyboard */,
 				AAEE701C20F16C1300662404 /* Info.plist */,
-				788046E8212EE50800D4D878 /* Game */,
-				AAB4DFB920F18DD300A19A20 /* CommonExtensions */,
 			);
 			path = SetGame;
 			sourceTree = "<group>";
