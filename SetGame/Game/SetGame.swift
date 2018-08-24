@@ -8,14 +8,22 @@
 
 import Foundation
 
-struct SetGame {
+protocol SetGameDelegate: AnyObject {
+  func gameDidChange()
+}
+
+class SetGame {
     private let maxSelectedCards = 3
+    private let setFoundPoints = 3
+    private let setFailurePoints = -5
     private let maxVisibleCards: Int
 
     private var deck = Deck()
     private(set) var visibleCards = [Card]()
     private(set) var selectedCards = [Card]()
     private(set) var score = 0
+
+    weak var delegate: SetGameDelegate?
 
     var isCardDeckEmpty: Bool {
         return deck.cards.isEmpty
@@ -25,15 +33,17 @@ struct SetGame {
         self.maxVisibleCards = maxVisibleCards
     }
 
-  mutating func initGame(drawing initialCardsCount: Int) {
-    deck = Deck()
-    visibleCards.removeAll()
-    selectedCards.removeAll()
-    score = 0
-    draw(numOfCards: initialCardsCount)
-  }
+    func initGame(drawing initialCardsCount: Int) {
+        deck = Deck()
+        visibleCards.removeAll()
+        selectedCards.removeAll()
+        score = 0
+        draw(numOfCards: initialCardsCount)
 
-    mutating func draw(numOfCards: Int = 3) {
+        delegate?.gameDidChange()
+    }
+
+    func draw(numOfCards: Int = 3) {
         guard visibleCards.count + numOfCards <= maxVisibleCards else {
             print("draw: Cannot draw more cards!")
             return
@@ -41,9 +51,11 @@ struct SetGame {
         for _ in 0..<numOfCards {
             visibleCards.append(deck.cards.removeFirst())
         }
+
+        delegate?.gameDidChange()
     }
 
-    mutating func chooseCard(at cardIndex: Int) {
+    func chooseCard(at cardIndex: Int) {
         let card = visibleCards[cardIndex]
         let isCardSelected = selectedCards.contains(card)
         if !isCardSelected && selectedCards.count == maxSelectedCards {
@@ -59,15 +71,17 @@ struct SetGame {
         if (selectedCards.count == 3) {
             verifySet()
         }
+
+        delegate?.gameDidChange()
     }
 
-    mutating func shuffleVisibleCards() {
-      visibleCards.shuffle()
-  }
+    func shuffleVisibleCards() {
+        visibleCards.shuffle()
+        delegate?.gameDidChange()
+    }
 
-    private mutating func verifySet() {
+    private func verifySet() {
         guard selectedCards.count == 3 else {
-            print("verifySet: Must have 3 selected cards to verify set!")
             return
         }
 
@@ -103,8 +117,8 @@ struct SetGame {
         updateScore(foundSet: isSet)
     }
 
-    private mutating func updateScore(foundSet: Bool) {
-        score += foundSet ? 3 : -5
+    private func updateScore(foundSet: Bool) {
+        score += foundSet ? setFoundPoints : setFailurePoints
     }
 
 

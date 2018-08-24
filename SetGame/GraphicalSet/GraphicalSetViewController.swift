@@ -10,7 +10,6 @@ import UIKit
 
 class GraphicalSetViewController: UIViewController {
 
-
   //MARK: - IBOutlets
   @IBOutlet weak var deckCardView: SetCardView! {
     didSet {
@@ -38,7 +37,11 @@ class GraphicalSetViewController: UIViewController {
   private static let minShuffleRotationAngle = CGFloat.degToRad(45)
 
   //MARK: - Porperties
-  private var game = SetGame(maxVisibleCards: GraphicalSetViewController.maxVisibleCards)
+  private lazy var game: SetGame = {
+    var game = SetGame(maxVisibleCards: GraphicalSetViewController.maxVisibleCards)
+    game.delegate = self
+    return game
+  }()
 
   override func viewDidLoad() {
     initGame()
@@ -51,7 +54,6 @@ class GraphicalSetViewController: UIViewController {
   //MARK: - Private methods
   private func initGame() {
     game.initGame(drawing: GraphicalSetViewController.initialCardsDrawn)
-    updateViewFromModel()
   }
 
   private func updateViewFromModel() {
@@ -78,8 +80,6 @@ class GraphicalSetViewController: UIViewController {
 
   private func drawMoreCards() {
     game.draw(numOfCards: GraphicalSetViewController.numberOfCardsToDraw)
-    //TODO: Implement a delegation for the game!
-    updateViewFromModel()
   }
 
   //MARK: - GestureRecognizer selectors
@@ -98,7 +98,6 @@ class GraphicalSetViewController: UIViewController {
       if let touchedCardView = gestureRecognizer.view,
         let touchedCardIndex = cardGridView.subviews.index(of: touchedCardView) {
         game.chooseCard(at: touchedCardIndex)
-        updateViewFromModel()
       }
     default:
       break
@@ -115,11 +114,15 @@ class GraphicalSetViewController: UIViewController {
       let rotationAbs = fabs(gestureRecognizer.rotation)
       if rotationAbs >= GraphicalSetViewController.minShuffleRotationAngle {
         game.shuffleVisibleCards()
-        updateViewFromModel()
       }
     default:
       break
       }
   }
+}
 
+extension GraphicalSetViewController: SetGameDelegate {
+  func gameDidChange() {
+    updateViewFromModel()
+  }
 }
