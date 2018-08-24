@@ -61,6 +61,10 @@ struct SetGame {
         }
     }
 
+    mutating func shuffleVisibleCards() {
+      visibleCards.shuffle()
+  }
+
     private mutating func verifySet() {
         guard selectedCards.count == 3 else {
             print("verifySet: Must have 3 selected cards to verify set!")

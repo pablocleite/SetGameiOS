@@ -12,6 +12,7 @@
 		788046F1212EF62200D4D878 /* GridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788046F0212EF62200D4D878 /* GridView.swift */; };
 		788046F4212EFDC400D4D878 /* CardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788046F3212EFDC400D4D878 /* CardViewModel.swift */; };
 		78853476212C9DA700B329AB /* SetCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78853475212C9DA700B329AB /* SetCardView.swift */; };
+		78F6E7C221308C9600365C86 /* CGFloat+Rads.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F6E7C121308C9600365C86 /* CGFloat+Rads.swift */; };
 		AAB4DFB820F18DBB00A19A20 /* Array+Shuffle.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAB4DFB720F18DBA00A19A20 /* Array+Shuffle.swift */; };
 		AAB4DFBB20F18E2D00A19A20 /* Int+Random.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAB4DFBA20F18E2D00A19A20 /* Int+Random.swift */; };
 		AAEE701120F16C1200662404 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAEE701020F16C1200662404 /* AppDelegate.swift */; };
@@ -30,6 +31,7 @@
 		788046F0212EF62200D4D878 /* GridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridView.swift; sourceTree = "<group>"; };
 		788046F3212EFDC400D4D878 /* CardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardViewModel.swift; sourceTree = "<group>"; };
 		78853475212C9DA700B329AB /* SetCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetCardView.swift; sourceTree = "<group>"; };
+		78F6E7C121308C9600365C86 /* CGFloat+Rads.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGFloat+Rads.swift"; sourceTree = "<group>"; };
 		AAB4DFB720F18DBA00A19A20 /* Array+Shuffle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+Shuffle.swift"; sourceTree = "<group>"; };
 		AAB4DFBA20F18E2D00A19A20 /* Int+Random.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Int+Random.swift"; sourceTree = "<group>"; };
 		AAEE700D20F16C1200662404 /* SetGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SetGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -106,6 +108,7 @@
 			children = (
 				AAB4DFBA20F18E2D00A19A20 /* Int+Random.swift */,
 				AAB4DFB720F18DBA00A19A20 /* Array+Shuffle.swift */,
+				78F6E7C121308C9600365C86 /* CGFloat+Rads.swift */,
 			);
 			path = CommonExtensions;
 			sourceTree = "<group>";
@@ -221,6 +224,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				78F6E7C221308C9600365C86 /* CGFloat+Rads.swift in Sources */,
 				AAEE701320F16C1200662404 /* UIViewSetViewController.swift in Sources */,
 				AAB4DFBB20F18E2D00A19A20 /* Int+Random.swift in Sources */,
 				AAB4DFB820F18DBB00A19A20 /* Array+Shuffle.swift in Sources */,

@@ -19,12 +19,23 @@ class GraphicalSetViewController: UIViewController {
     }
   }
 
-  @IBOutlet weak var cardGridView: GridView!
+  @IBOutlet weak var cardGridView: GridView! {
+    didSet {
+      let swipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(didSwipeOnCardGridView(_:)))
+      swipeGestureRecognizer.direction = .down
+      cardGridView.addGestureRecognizer(swipeGestureRecognizer)
+
+      let rotationGestureRecognizer = UIRotationGestureRecognizer(target: self, action: #selector(didRotateOnCardGridView(_:)))
+      cardGridView.addGestureRecognizer(rotationGestureRecognizer)
+    }
+  }
   @IBOutlet weak var scoreLabel: UILabel!
 
   //MARK: - Constants
   private static let maxVisibleCards = 81
   private static let initialCardsDrawn = 0
+  private static let numberOfCardsToDraw = 3
+  private static let minShuffleRotationAngle = CGFloat.degToRad(45)
 
   //MARK: - Porperties
   private var game = SetGame(maxVisibleCards: GraphicalSetViewController.maxVisibleCards)
@@ -33,8 +44,17 @@ class GraphicalSetViewController: UIViewController {
     initGame()
   }
 
+  @IBAction func didTouchResetButton(_ sender: UIButton) {
+    initGame()
+  }
 
-  func updateViewFromModel() {
+  //MARK: - Private methods
+  private func initGame() {
+    game.initGame(drawing: GraphicalSetViewController.initialCardsDrawn)
+    updateViewFromModel()
+  }
+
+  private func updateViewFromModel() {
     //TODO: Improve this, let's make it work for now, but attempt to not do this every time.
     cardGridView.subviews.forEach( { $0.removeFromSuperview() })
 
@@ -53,24 +73,20 @@ class GraphicalSetViewController: UIViewController {
 
     deckCardView.isHidden = game.isCardDeckEmpty
     scoreLabel.text = "Score\n\(game.score)"
-    
+
   }
 
-  private func initGame() {
-    game.initGame(drawing: GraphicalSetViewController.initialCardsDrawn)
+  private func drawMoreCards() {
+    game.draw(numOfCards: GraphicalSetViewController.numberOfCardsToDraw)
+    //TODO: Implement a delegation for the game!
     updateViewFromModel()
   }
 
-  @IBAction func didTouchResetButton(_ sender: UIButton) {
-    initGame()
-  }
-
+  //MARK: - GestureRecognizer selectors
   @objc func didTouchDeckCardView(_ gestureRecognizer: UITapGestureRecognizer) {
     switch gestureRecognizer.state {
     case .ended:
-      game.draw(numOfCards: 3)
-      //TODO: Implement a delegation for the game!
-      updateViewFromModel()
+      drawMoreCards()
     default:
       break
     }
@@ -87,6 +103,23 @@ class GraphicalSetViewController: UIViewController {
     default:
       break
     }
+  }
+
+  @objc func didSwipeOnCardGridView(_ gestureRecognizer: UISwipeGestureRecognizer) {
+    drawMoreCards()
+  }
+
+  @objc func didRotateOnCardGridView(_ gestureRecognizer: UIRotationGestureRecognizer) {
+    switch gestureRecognizer.state {
+    case .ended:
+      let rotationAbs = fabs(gestureRecognizer.rotation)
+      if rotationAbs >= GraphicalSetViewController.minShuffleRotationAngle {
+        game.shuffleVisibleCards()
+        updateViewFromModel()
+      }
+    default:
+      break
+      }
   }
 
 }
