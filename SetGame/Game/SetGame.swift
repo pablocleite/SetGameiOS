@@ -33,7 +33,7 @@ class SetGame {
         self.maxVisibleCards = maxVisibleCards
     }
 
-    func initGame(drawing initialCardsCount: Int) {
+    func initGame(drawing initialCardsCount: Int = 0) {
         deck = Deck()
         visibleCards.removeAll()
         selectedCards.removeAll()
@@ -111,7 +111,9 @@ class SetGame {
             for card in selectedCards {
                 if let cardIndex = visibleCards.index(of: card) {
                     visibleCards.remove(at: cardIndex)
-                    visibleCards.insert(deck.cards.removeFirst(), at: cardIndex)
+                    if !deck.cards.isEmpty {
+                        visibleCards.insert(deck.cards.removeFirst(), at: cardIndex)
+                    }
                 } else {
                     print("UhOh! verifySet: Cannot replace set cards because card:\(card) is missing from visibleCards")
                 }

@@ -473,6 +473,7 @@
                         <outlet property="cardGridView" destination="mAn-hp-kDV" id="aNh-tz-30I"/>
                         <outlet property="deckCardView" destination="x3V-Hh-Mrr" id="eUI-oV-Y73"/>
                         <outlet property="matchedDeckCardView" destination="ZWC-no-xvE" id="seQ-bl-Lpm"/>
+                        <outlet property="resetButton" destination="RZU-o0-lK1" id="IgE-sz-omL"/>
                         <outlet property="scoreLabel" destination="hPe-62-1gH" id="LRv-NT-OMJ"/>
                     </connections>
                 </viewController>

@@ -33,12 +33,15 @@ class GraphicalSetViewController: UIViewController {
         }
     }
     @IBOutlet weak var scoreLabel: UILabel!
-
+    @IBOutlet weak var resetButton: UIButton!
+    
     //MARK: - Constants
     private static let maxVisibleCards = 81
     private static let initialCardsDrawn = 12
     private static let numberOfCardsToDraw = 3
     private static let minShuffleRotationAngle = CGFloat.degToRad(45)
+    private static let cardGridViewSpacing: CGFloat = 8
+    private static let drawCardDuration: TimeInterval = 0.15
 
     //MARK: - Porperties
     private lazy var game: SetGame = {
@@ -49,27 +52,46 @@ class GraphicalSetViewController: UIViewController {
 
     private lazy var cardViewsDict = [Card:SetCardView]()
     private weak var drawCardsTimer: Timer?
-    private var isDrawingCards = false
+    private var isDrawingCards = false {
+        didSet {
+            deckCardView.isUserInteractionEnabled = !isDrawingCards
+            resetButton.isEnabled = !isDrawingCards
+        }
+    }
 
     override func viewDidLoad() {
         initGame()
     }
 
     override func viewDidLayoutSubviews() {
-        cardGridView.contentInsets = UIEdgeInsets(top: 0, left: deckCardView.frame.width + 8, bottom: 0, right: 0)
+        cardGridView.contentInsets = UIEdgeInsets(top: 0,
+                                                  left: deckCardView.frame.width + GraphicalSetViewController.cardGridViewSpacing,
+                                                  bottom: 0,
+                                                  right: 0)
     }
 
     @IBAction func didTouchResetButton(_ sender: UIButton) {
-        cardViewsDict.values.forEach({ $0.removeFromSuperview() })
-        cardViewsDict.removeAll()
-        cardGridView.elementCount = 0
-        initGame()
+        UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 0.4,
+                                                       delay: 0,
+                                                       options: [.curveEaseOut],
+                                                       animations: { [weak self] in
+                                                        self?.cardViewsDict.values.forEach { (cardView) in
+                                                            cardView.alpha = 0
+                                                        }
+        },
+                                                       completion: { [weak self] (position) in
+                                                        self?.cardViewsDict.values.forEach({ $0.removeFromSuperview() })
+                                                        self?.cardViewsDict.removeAll()
+                                                        self?.cardGridView.elementCount = 0
+                                                        self?.deckCardView.isHidden = false
+                                                        self?.matchedDeckCardView.isHidden = true
+                                                        self?.initGame()
+        })
     }
 
     //MARK: - Private methods
     private func initGame() {
-        game.initGame(drawing: 0)
-
+        game.initGame()
         drawMoreCards(GraphicalSetViewController.initialCardsDrawn)
     }
 
@@ -140,15 +162,17 @@ class GraphicalSetViewController: UIViewController {
         }
     }
 
-    private func drawMoreCards(_ cardsToDraw: Int) {
+    private func drawMoreCards(_ cardsToDraw: Int = GraphicalSetViewController.numberOfCardsToDraw) {
         cardGridView.elementCount += cardsToDraw
         isDrawingCards = true
-        drawCardsTimer = Timer.scheduledTimer(withTimeInterval: 0.15, repeats: true, block: { [weak self] (timer) in
-            self?.game.draw(numOfCards: 1)
-            if self?.game.visibleCards.count == self?.cardGridView.elementCount {
-                self?.isDrawingCards = false
-                timer.invalidate()
-            }
+        drawCardsTimer = Timer.scheduledTimer(withTimeInterval: GraphicalSetViewController.drawCardDuration,
+                                              repeats: true,
+                                              block: { [weak self] (timer) in
+                                                self?.game.draw(numOfCards: 1)
+                                                if self?.game.visibleCards.count == self?.cardGridView.elementCount {
+                                                    self?.isDrawingCards = false
+                                                    timer.invalidate()
+                                                }
         })
     }
 
@@ -156,7 +180,7 @@ class GraphicalSetViewController: UIViewController {
     @objc func didTouchDeckCardView(_ gestureRecognizer: UITapGestureRecognizer) {
         switch gestureRecognizer.state {
         case .ended:
-            drawMoreCards(3)
+            drawMoreCards()
         default:
             break
         }
@@ -179,7 +203,7 @@ class GraphicalSetViewController: UIViewController {
     }
 
     @objc func didSwipeOnCardGridView(_ gestureRecognizer: UISwipeGestureRecognizer) {
-        drawMoreCards(3)
+        drawMoreCards()
     }
 
     @objc func didRotateOnCardGridView(_ gestureRecognizer: UIRotationGestureRecognizer) {
@@ -212,9 +236,10 @@ extension GraphicalSetViewController: SetGameDelegate {
 }
 
 extension SetCardView {
+    private static let flipCardAnimationDuration: TimeInterval = 0.2
     func flipCard(animated: Bool = true, completion: ((SetCardView) -> Void)? = nil) {
         UIView.transition(with: self,
-                          duration: 0.2,
+                          duration: SetCardView.flipCardAnimationDuration,
                           options: [.transitionFlipFromLeft],
                           animations: { [unowned self] in self.isFaceUp = !self.isFaceUp },
                           completion: { (didFinish) in completion?(self) })
