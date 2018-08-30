@@ -26,13 +26,15 @@ class GraphicalSetViewController: UIViewController {
 
             let rotationGestureRecognizer = UIRotationGestureRecognizer(target: self, action: #selector(didRotateOnCardGridView(_:)))
             cardGridView.addGestureRecognizer(rotationGestureRecognizer)
+
+            cardGridView.delegate = self
         }
     }
     @IBOutlet weak var scoreLabel: UILabel!
 
     //MARK: - Constants
     private static let maxVisibleCards = 81
-    private static let initialCardsDrawn = 0
+    private static let initialCardsDrawn = 12
     private static let numberOfCardsToDraw = 3
     private static let minShuffleRotationAngle = CGFloat.degToRad(45)
 
@@ -44,6 +46,8 @@ class GraphicalSetViewController: UIViewController {
     }()
 
     private lazy var cardViewsDict = [Card:SetCardView]()
+    private weak var drawCardsTimer: Timer?
+    private var isDrawingInitialCards = false
 
     override func viewDidLoad() {
         initGame()
@@ -55,23 +59,38 @@ class GraphicalSetViewController: UIViewController {
 
     //MARK: - Private methods
     private func initGame() {
-        game.initGame(drawing: GraphicalSetViewController.initialCardsDrawn)
+        game.initGame(drawing: 0)
+
+        cardGridView.elementCount = GraphicalSetViewController.initialCardsDrawn
+        isDrawingInitialCards = true
+        drawCardsTimer = Timer.scheduledTimer(withTimeInterval: 0.15, repeats: true, block: { [weak self] (timer) in
+            self?.game.draw(numOfCards: 1)
+            if self?.game.visibleCards.count == GraphicalSetViewController.initialCardsDrawn {
+                self?.isDrawingInitialCards = false
+                timer.invalidate()
+            }
+        })
     }
 
     private func updateViewFromModel() {
 
         let cardsToRemove = cardViewsDict.keys.filter( { !game.visibleCards.contains($0) } )
+        let cardsToAdd = game.visibleCards.filter( { !cardViewsDict.keys.contains($0) } )
+
+        if !isDrawingInitialCards {
+            cardGridView.elementCount -= cardsToRemove.count
+            cardGridView.elementCount += cardsToAdd.count
+        }
 
         cardsToRemove.forEach({ (card) in
             cardViewsDict[card]?.removeFromSuperview()
             cardViewsDict.removeValue(forKey: card)
         })
 
-        let cardsToAdd = game.visibleCards.filter( { !cardViewsDict.keys.contains($0) } )
         cardsToAdd.forEach { (card) in
             let cardViewModel = CardViewModel(from: card)
-            let cardView = SetCardView(frame: .zero)
-            cardView.isFaceUp = true
+            let cardView = SetCardView(frame: deckCardView.frame)
+            cardView.isFaceUp = false
             cardView.shape = cardViewModel.shape
             cardView.shapeCount = cardViewModel.shapeCount
             cardView.color = cardViewModel.color
@@ -133,6 +152,19 @@ class GraphicalSetViewController: UIViewController {
             }
         default:
             break
+        }
+    }
+}
+
+extension GraphicalSetViewController: GridViewDelegate {
+    func didFinishViewTransitionAnimation(view: UIView) {
+        if let cardView = view as? SetCardView {
+            if !cardView.isFaceUp {
+                UIView.transition(with: cardView,
+                                  duration: 0.2,
+                                  options: [.transitionFlipFromLeft],
+                                  animations: { cardView.isFaceUp = true })
+            }
         }
     }
 }
