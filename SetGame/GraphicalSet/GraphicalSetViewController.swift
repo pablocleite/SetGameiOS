@@ -49,7 +49,7 @@ class GraphicalSetViewController: UIViewController {
 
     private lazy var cardViewsDict = [Card:SetCardView]()
     private weak var drawCardsTimer: Timer?
-    private var isDrawingInitialCards = false
+    private var isDrawingCards = false
 
     override func viewDidLoad() {
         initGame()
@@ -60,32 +60,30 @@ class GraphicalSetViewController: UIViewController {
     }
 
     @IBAction func didTouchResetButton(_ sender: UIButton) {
+        cardViewsDict.values.forEach({ $0.removeFromSuperview() })
+        cardViewsDict.removeAll()
+        cardGridView.elementCount = 0
         initGame()
     }
 
     //MARK: - Private methods
     private func initGame() {
         game.initGame(drawing: 0)
-        cardGridView.elementCount = 0
 
         drawMoreCards(GraphicalSetViewController.initialCardsDrawn)
     }
 
     private func updateViewFromModel() {
-
         let cardsToRemove = cardViewsDict.keys.filter( { !game.visibleCards.contains($0) } )
         let cardsToAdd = game.visibleCards.filter( { !cardViewsDict.keys.contains($0) } )
 
-        if !isDrawingInitialCards {
+        if !isDrawingCards {
             cardGridView.elementCount -= cardsToRemove.count
             cardGridView.elementCount += cardsToAdd.count
         }
 
         cardsToRemove.forEach({ (card) in
-
-            //TODO: Animate matched cards!
-            cardViewsDict[card]?.removeFromSuperview()
-            cardViewsDict.removeValue(forKey: card)
+            removeCard(card)
         })
 
         cardsToAdd.forEach { (card) in
@@ -108,7 +106,6 @@ class GraphicalSetViewController: UIViewController {
 
         deckCardView.isHidden = game.isCardDeckEmpty
         scoreLabel.text = "Score\n\(game.score)"
-
     }
 
     private func createCardView(with card: Card, withFrame frame: CGRect) -> SetCardView {
@@ -124,13 +121,32 @@ class GraphicalSetViewController: UIViewController {
         return cardView
     }
 
+    private func removeCard(_ card: Card, animated: Bool = true) {
+        if let cardView = cardViewsDict[card] {
+            cardGridView.stopManagingSubview(cardView)
+            UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 0.2,
+                                                           delay: 0,
+                                                           options: [.curveEaseInOut],
+                                                           animations: { [unowned self] in
+                                                            cardView.frame = self.matchedDeckCardView.frame
+                }, completion: { [unowned self] (position) in
+                    self.matchedDeckCardView.isHidden = true
+                    cardView.flipCard() { [weak self] in
+                        self?.matchedDeckCardView.isHidden = false
+                        self?.cardViewsDict.removeValue(forKey: card)
+                        $0.removeFromSuperview()
+                    }
+            })
+        }
+    }
+
     private func drawMoreCards(_ cardsToDraw: Int) {
         cardGridView.elementCount += cardsToDraw
-        isDrawingInitialCards = true
+        isDrawingCards = true
         drawCardsTimer = Timer.scheduledTimer(withTimeInterval: 0.15, repeats: true, block: { [weak self] (timer) in
             self?.game.draw(numOfCards: 1)
             if self?.game.visibleCards.count == self?.cardGridView.elementCount {
-                self?.isDrawingInitialCards = false
+                self?.isDrawingCards = false
                 timer.invalidate()
             }
         })
@@ -183,10 +199,7 @@ extension GraphicalSetViewController: GridViewDelegate {
     func didFinishViewTransitionAnimation(view: UIView) {
         if let cardView = view as? SetCardView {
             if !cardView.isFaceUp {
-                UIView.transition(with: cardView,
-                                  duration: 0.2,
-                                  options: [.transitionFlipFromLeft],
-                                  animations: { cardView.isFaceUp = true })
+                cardView.flipCard()
             }
         }
     }
@@ -195,5 +208,15 @@ extension GraphicalSetViewController: GridViewDelegate {
 extension GraphicalSetViewController: SetGameDelegate {
     func gameDidChange() {
         updateViewFromModel()
+    }
+}
+
+extension SetCardView {
+    func flipCard(animated: Bool = true, completion: ((SetCardView) -> Void)? = nil) {
+        UIView.transition(with: self,
+                          duration: 0.2,
+                          options: [.transitionFlipFromLeft],
+                          animations: { [unowned self] in self.isFaceUp = !self.isFaceUp },
+                          completion: { (didFinish) in completion?(self) })
     }
 }

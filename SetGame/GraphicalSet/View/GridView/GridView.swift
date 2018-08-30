@@ -43,6 +43,10 @@ class GridView: UIView {
         addSubview(view)
     }
 
+    func stopManagingSubview(_ view: UIView) {
+        managedSubviews = managedSubviews.filter({ $0 != view})
+    }
+
     override func willRemoveSubview(_ subview: UIView) {
         if let index = managedSubviews.index(of: subview) {
             managedSubviews.remove(at: index)
@@ -60,12 +64,13 @@ class GridView: UIView {
                 UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 0.3,
                                                                delay: 0.0,
                                                                options: [.curveEaseInOut],
-                                                               animations: { [unowned self] in
+                                                               animations: {
+                                                                [unowned self] in
                                                                 self.managedSubviews[subviewIndex].frame = subViewFrame.insetBy(dx: self.viewSpacing, dy: self.viewSpacing)
-                    },
+                                                               },
                                                                completion: { [unowned self] (position) in
                                                                 self.delegate?.didFinishViewTransitionAnimation(view: self.managedSubviews[subviewIndex])
-                })
+                                                               })
             } else {
                 print("UhOh! A subview frame has not been found in the grid!")
             }
