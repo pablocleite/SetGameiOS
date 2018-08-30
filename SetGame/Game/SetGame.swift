@@ -55,8 +55,7 @@ class SetGame {
         delegate?.gameDidChange()
     }
 
-    func chooseCard(at cardIndex: Int) {
-        let card = visibleCards[cardIndex]
+    func chooseCard(_ card: Card) {
         let isCardSelected = selectedCards.contains(card)
         if !isCardSelected && selectedCards.count == maxSelectedCards {
             selectedCards.removeAll()
@@ -73,6 +72,11 @@ class SetGame {
         }
 
         delegate?.gameDidChange()
+    }
+
+    func chooseCard(at cardIndex: Int) {
+        let card = visibleCards[cardIndex]
+        chooseCard(card)
     }
 
     func shuffleVisibleCards() {

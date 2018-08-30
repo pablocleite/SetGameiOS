@@ -18,6 +18,8 @@ class GraphicalSetViewController: UIViewController {
         }
     }
 
+    @IBOutlet weak var matchedDeckCardView: SetCardView!
+
     @IBOutlet weak var cardGridView: GridView! {
         didSet {
             let swipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(didSwipeOnCardGridView(_:)))
@@ -53,6 +55,10 @@ class GraphicalSetViewController: UIViewController {
         initGame()
     }
 
+    override func viewDidLayoutSubviews() {
+        cardGridView.contentInsets = UIEdgeInsets(top: 0, left: deckCardView.frame.width + 8, bottom: 0, right: 0)
+    }
+
     @IBAction func didTouchResetButton(_ sender: UIButton) {
         initGame()
     }
@@ -60,16 +66,9 @@ class GraphicalSetViewController: UIViewController {
     //MARK: - Private methods
     private func initGame() {
         game.initGame(drawing: 0)
+        cardGridView.elementCount = 0
 
-        cardGridView.elementCount = GraphicalSetViewController.initialCardsDrawn
-        isDrawingInitialCards = true
-        drawCardsTimer = Timer.scheduledTimer(withTimeInterval: 0.15, repeats: true, block: { [weak self] (timer) in
-            self?.game.draw(numOfCards: 1)
-            if self?.game.visibleCards.count == GraphicalSetViewController.initialCardsDrawn {
-                self?.isDrawingInitialCards = false
-                timer.invalidate()
-            }
-        })
+        drawMoreCards(GraphicalSetViewController.initialCardsDrawn)
     }
 
     private func updateViewFromModel() {
@@ -83,22 +82,21 @@ class GraphicalSetViewController: UIViewController {
         }
 
         cardsToRemove.forEach({ (card) in
+
+            //TODO: Animate matched cards!
             cardViewsDict[card]?.removeFromSuperview()
             cardViewsDict.removeValue(forKey: card)
         })
 
         cardsToAdd.forEach { (card) in
-            let cardViewModel = CardViewModel(from: card)
-            let cardView = SetCardView(frame: deckCardView.frame)
-            cardView.isFaceUp = false
-            cardView.shape = cardViewModel.shape
-            cardView.shapeCount = cardViewModel.shapeCount
-            cardView.color = cardViewModel.color
-            cardView.shading = cardViewModel.shading
-            cardView.isSelected = game.selectedCards.contains(card)
-            cardView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTouchCardView(_:))))
+            let initialFrame = CGRect(x: deckCardView.frame.minX,
+                                      y: deckCardView.frame.minY,
+                                      width: deckCardView.frame.width,
+                                      height: deckCardView.frame.height)
+
+            let cardView = createCardView(with: card, withFrame: initialFrame)
             cardViewsDict[card] = cardView
-            cardGridView.addSubview(cardView)
+            cardGridView.addSubview(cardView, isManaged: true)
         }
 
         let currentSelectedCards = cardViewsDict.values.filter({ $0.isSelected })
@@ -113,15 +111,36 @@ class GraphicalSetViewController: UIViewController {
 
     }
 
-    private func drawMoreCards() {
-        game.draw(numOfCards: GraphicalSetViewController.numberOfCardsToDraw)
+    private func createCardView(with card: Card, withFrame frame: CGRect) -> SetCardView {
+        let cardViewModel = CardViewModel(from: card)
+        let cardView = SetCardView(frame: frame)
+        cardView.isFaceUp = false
+        cardView.shape = cardViewModel.shape
+        cardView.shapeCount = cardViewModel.shapeCount
+        cardView.color = cardViewModel.color
+        cardView.shading = cardViewModel.shading
+        cardView.isSelected = game.selectedCards.contains(card)
+        cardView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTouchCardView(_:))))
+        return cardView
+    }
+
+    private func drawMoreCards(_ cardsToDraw: Int) {
+        cardGridView.elementCount += cardsToDraw
+        isDrawingInitialCards = true
+        drawCardsTimer = Timer.scheduledTimer(withTimeInterval: 0.15, repeats: true, block: { [weak self] (timer) in
+            self?.game.draw(numOfCards: 1)
+            if self?.game.visibleCards.count == self?.cardGridView.elementCount {
+                self?.isDrawingInitialCards = false
+                timer.invalidate()
+            }
+        })
     }
 
     //MARK: - GestureRecognizer selectors
     @objc func didTouchDeckCardView(_ gestureRecognizer: UITapGestureRecognizer) {
         switch gestureRecognizer.state {
         case .ended:
-            drawMoreCards()
+            drawMoreCards(3)
         default:
             break
         }
@@ -130,9 +149,13 @@ class GraphicalSetViewController: UIViewController {
     @objc func didTouchCardView(_ gestureRecognizer: UITapGestureRecognizer) {
         switch gestureRecognizer.state {
         case .ended:
-            if let touchedCardView = gestureRecognizer.view,
-                let touchedCardIndex = cardGridView.subviews.index(of: touchedCardView) {
-                game.chooseCard(at: touchedCardIndex)
+            if let touchedCardView = gestureRecognizer.view {
+                let cardViewPair = cardViewsDict.filter { (_, cardView) -> Bool in
+                    return cardView == touchedCardView
+                }.first
+                if let card = cardViewPair?.key {
+                    game.chooseCard(card)
+                }
             }
         default:
             break
@@ -140,7 +163,7 @@ class GraphicalSetViewController: UIViewController {
     }
 
     @objc func didSwipeOnCardGridView(_ gestureRecognizer: UISwipeGestureRecognizer) {
-        drawMoreCards()
+        drawMoreCards(3)
     }
 
     @objc func didRotateOnCardGridView(_ gestureRecognizer: UIRotationGestureRecognizer) {

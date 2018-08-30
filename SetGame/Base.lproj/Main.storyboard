@@ -362,46 +362,81 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="x3V-Hh-Mrr" customClass="SetCardView" customModule="SetGame" customModuleProvider="target">
-                                <rect key="frame" x="8" y="20" width="70" height="105"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mAn-hp-kDV" customClass="GridView" customModule="SetGame" customModuleProvider="target">
+                                <rect key="frame" x="8" y="20" width="359" height="590"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="x3V-Hh-Mrr" customClass="SetCardView" customModule="SetGame" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="70" height="105"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="x3V-Hh-Mrr" secondAttribute="height" multiplier="2:3" id="HN9-YV-zm6"/>
+                                            <constraint firstAttribute="width" constant="70" id="Rqe-9r-RBt"/>
+                                        </constraints>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="ibColor">
+                                                <integer key="value" value="1"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="ibCount">
+                                                <integer key="value" value="3"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="ibShading">
+                                                <integer key="value" value="0"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="stripeSpacing">
+                                                <real key="value" value="3"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="ibShape">
+                                                <integer key="value" value="1"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="shapeStrokeWidth">
+                                                <real key="value" value="3"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </view>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hPe-62-1gH">
+                                        <rect key="frame" x="8" y="498.5" width="55" height="45.5"/>
+                                        <string key="text">Score:
+100</string>
+                                        <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="19"/>
+                                        <color key="textColor" red="1" green="0.67570823059999996" blue="0.019082415799999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZWC-no-xvE" customClass="SetCardView" customModule="SetGame" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="145" width="70" height="105"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="ibColor">
+                                                <integer key="value" value="1"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="ibCount">
+                                                <integer key="value" value="3"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="ibShading">
+                                                <integer key="value" value="0"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="stripeSpacing">
+                                                <real key="value" value="3"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="ibShape">
+                                                <integer key="value" value="1"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="shapeStrokeWidth">
+                                                <real key="value" value="3"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </view>
+                                </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" secondItem="x3V-Hh-Mrr" secondAttribute="height" multiplier="2:3" id="HN9-YV-zm6"/>
-                                    <constraint firstAttribute="width" constant="70" id="Rqe-9r-RBt"/>
+                                    <constraint firstItem="ZWC-no-xvE" firstAttribute="top" secondItem="x3V-Hh-Mrr" secondAttribute="bottom" priority="250" constant="40" id="0Fs-Yn-PfF"/>
+                                    <constraint firstItem="x3V-Hh-Mrr" firstAttribute="leading" secondItem="mAn-hp-kDV" secondAttribute="leading" id="MFM-G0-VBJ"/>
+                                    <constraint firstItem="ZWC-no-xvE" firstAttribute="height" secondItem="x3V-Hh-Mrr" secondAttribute="height" id="RDg-VD-Mjp"/>
+                                    <constraint firstItem="x3V-Hh-Mrr" firstAttribute="top" secondItem="mAn-hp-kDV" secondAttribute="top" id="Rex-Dg-6Ra"/>
+                                    <constraint firstItem="ZWC-no-xvE" firstAttribute="width" secondItem="x3V-Hh-Mrr" secondAttribute="width" id="fyP-7n-pAN"/>
+                                    <constraint firstItem="ZWC-no-xvE" firstAttribute="leading" secondItem="x3V-Hh-Mrr" secondAttribute="leading" id="ixL-kx-7OA"/>
+                                    <constraint firstItem="hPe-62-1gH" firstAttribute="top" relation="greaterThanOrEqual" secondItem="ZWC-no-xvE" secondAttribute="bottom" priority="250" constant="8" id="zJV-wR-ygi"/>
                                 </constraints>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="ibColor">
-                                        <integer key="value" value="1"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="ibCount">
-                                        <integer key="value" value="3"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="ibShading">
-                                        <integer key="value" value="0"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="stripeSpacing">
-                                        <real key="value" value="3"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="ibShape">
-                                        <integer key="value" value="1"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="shapeStrokeWidth">
-                                        <real key="value" value="3"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mAn-hp-kDV" customClass="GridView" customModule="SetGame" customModuleProvider="target">
-                                <rect key="frame" x="86" y="20" width="281" height="590"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hPe-62-1gH">
-                                <rect key="frame" x="16" y="141" width="55" height="45.5"/>
-                                <string key="text">Score:
-100</string>
-                                <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="19"/>
-                                <color key="textColor" red="1" green="0.67570823059999996" blue="0.019082415799999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RZU-o0-lK1">
                                 <rect key="frame" x="8" y="572" width="70" height="30"/>
                                 <color key="backgroundColor" red="0.22158873779999999" green="0.33689754039999997" blue="0.68218887549999996" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
@@ -421,16 +456,15 @@
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="mAn-hp-kDV" firstAttribute="leading" secondItem="x3V-Hh-Mrr" secondAttribute="trailing" constant="8" id="07M-w9-dwB"/>
-                            <constraint firstItem="x3V-Hh-Mrr" firstAttribute="leading" secondItem="vwj-iX-qjc" secondAttribute="leading" constant="8" id="CmZ-De-j7l"/>
+                            <constraint firstItem="hPe-62-1gH" firstAttribute="centerX" secondItem="RZU-o0-lK1" secondAttribute="centerX" id="5C6-xW-Eft"/>
+                            <constraint firstItem="mAn-hp-kDV" firstAttribute="leading" secondItem="vwj-iX-qjc" secondAttribute="leading" constant="8" id="9kT-Av-tMO"/>
+                            <constraint firstItem="RZU-o0-lK1" firstAttribute="leading" secondItem="vwj-iX-qjc" secondAttribute="leading" constant="8" id="E5p-cO-MVG"/>
                             <constraint firstItem="mAn-hp-kDV" firstAttribute="top" secondItem="vwj-iX-qjc" secondAttribute="top" id="LoR-PZ-PeM"/>
                             <constraint firstItem="vwj-iX-qjc" firstAttribute="trailing" secondItem="mAn-hp-kDV" secondAttribute="trailing" constant="8" id="S2H-pk-Dyy"/>
-                            <constraint firstItem="x3V-Hh-Mrr" firstAttribute="top" secondItem="vwj-iX-qjc" secondAttribute="top" id="XOz-IC-iIo"/>
-                            <constraint firstItem="hPe-62-1gH" firstAttribute="centerX" secondItem="x3V-Hh-Mrr" secondAttribute="centerX" id="aa2-9X-dBS"/>
-                            <constraint firstItem="RZU-o0-lK1" firstAttribute="centerX" secondItem="x3V-Hh-Mrr" secondAttribute="centerX" id="byu-Su-kQc"/>
+                            <constraint firstItem="RZU-o0-lK1" firstAttribute="top" secondItem="hPe-62-1gH" secondAttribute="bottom" constant="8" id="Skg-D5-mcm"/>
                             <constraint firstItem="mAn-hp-kDV" firstAttribute="bottom" secondItem="I9k-RR-UsU" secondAttribute="bottomMargin" constant="-8" id="fA0-4v-igp"/>
                             <constraint firstItem="vwj-iX-qjc" firstAttribute="bottom" secondItem="RZU-o0-lK1" secondAttribute="bottom" constant="16" id="r5B-YK-fwb"/>
-                            <constraint firstItem="hPe-62-1gH" firstAttribute="top" secondItem="x3V-Hh-Mrr" secondAttribute="bottom" constant="16" id="s8e-Af-1BU"/>
+                            <constraint firstItem="vwj-iX-qjc" firstAttribute="trailing" secondItem="mAn-hp-kDV" secondAttribute="trailing" constant="8" id="xJZ-4J-t7T"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="vwj-iX-qjc"/>
                     </view>
@@ -438,6 +472,7 @@
                     <connections>
                         <outlet property="cardGridView" destination="mAn-hp-kDV" id="aNh-tz-30I"/>
                         <outlet property="deckCardView" destination="x3V-Hh-Mrr" id="eUI-oV-Y73"/>
+                        <outlet property="matchedDeckCardView" destination="ZWC-no-xvE" id="seQ-bl-Lpm"/>
                         <outlet property="scoreLabel" destination="hPe-62-1gH" id="LRv-NT-OMJ"/>
                     </connections>
                 </viewController>

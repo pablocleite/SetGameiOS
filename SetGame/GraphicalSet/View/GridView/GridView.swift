@@ -16,6 +16,14 @@ class GridView: UIView {
 
     weak var delegate: GridViewDelegate?
 
+    private var managedSubviews = [UIView]()
+
+    var contentInsets = UIEdgeInsets.zero {
+        didSet {
+             setNeedsLayout()
+        }
+    }
+
     private let viewSpacing: CGFloat = 3
     private var grid = Grid(layout: .aspectRatio(2/3));
 
@@ -28,19 +36,35 @@ class GridView: UIView {
         }
     }
 
-    override func layoutSubviews() {
-        grid.frame = CGRect(x: 0, y: 0, width: frame.width, height: frame.height)
+    func addSubview(_ view: UIView, isManaged: Bool) {
+        if isManaged {
+            managedSubviews.append(view)
+        }
+        addSubview(view)
+    }
 
-        for subviewIndex in subviews.indices {
+    override func willRemoveSubview(_ subview: UIView) {
+        if let index = managedSubviews.index(of: subview) {
+            managedSubviews.remove(at: index)
+        }
+    }
+
+    override func layoutSubviews() {
+        grid.frame = CGRect(x: contentInsets.left,
+                            y: contentInsets.top,
+                            width: frame.width - contentInsets.left - contentInsets.right,
+                            height: frame.height - contentInsets.top - contentInsets.bottom)
+
+        for subviewIndex in managedSubviews.indices {
             if let subViewFrame = grid[subviewIndex] {
                 UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 0.3,
                                                                delay: 0.0,
                                                                options: [.curveEaseInOut],
                                                                animations: { [unowned self] in
-                                                                self.subviews[subviewIndex].frame = subViewFrame.insetBy(dx: self.viewSpacing, dy: self.viewSpacing)
+                                                                self.managedSubviews[subviewIndex].frame = subViewFrame.insetBy(dx: self.viewSpacing, dy: self.viewSpacing)
                     },
                                                                completion: { [unowned self] (position) in
-                                                                self.delegate?.didFinishViewTransitionAnimation(view: self.subviews[subviewIndex])
+                                                                self.delegate?.didFinishViewTransitionAnimation(view: self.managedSubviews[subviewIndex])
                 })
             } else {
                 print("UhOh! A subview frame has not been found in the grid!")
