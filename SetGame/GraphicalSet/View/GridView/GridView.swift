@@ -27,7 +27,15 @@ class GridView: UIView {
 
     for subviewIndex in subviews.indices {
       if let subViewFrame = grid[subviewIndex] {
-        subviews[subviewIndex].frame = subViewFrame.insetBy(dx: viewSpacing, dy: viewSpacing)
+        UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 0.3,
+                                                       delay: 0.0,
+                                                       options: .curveEaseIn,
+                                                       animations: { [unowned self] in
+          self.subviews[subviewIndex].frame = subViewFrame.insetBy(dx: self.viewSpacing, dy: self.viewSpacing)
+          },
+          completion: { (position) in
+
+       })
       } else {
         print("UhOh! A subview frame has not been found in the grid!")
       }
